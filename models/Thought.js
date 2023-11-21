@@ -25,5 +25,10 @@ const thoughtSchema = new Schema(
   }
 );
 
-const Thought = model('Thought', thoughtSchema);
+thoughtSchema.virtual('formattedDate').get(function () {
+  return this.createdAt.toLocaleDateString("en-US");
+});
+
+const Thought = model('thought', thoughtSchema);
+
 module.exports = Thought;
