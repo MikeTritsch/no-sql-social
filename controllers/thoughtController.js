@@ -17,7 +17,6 @@ module.exports = {
     try {
       const thought = await Thought.findOne({ _id: req.params.thoughtId })
       .select('__v');
-      //REVIEW - Huh???
 
       if (!user) {
         return res.status(404).json({ message: 'No Thought found with that ID!' });
@@ -33,8 +32,16 @@ module.exports = {
     try {
       const thought = await Thought.create(req.body);
       console.log(thought);
-      User.thoughts.push(thought.thoughtId);
-      //REVIEW - Do I need the extended dot notation for thought ID?
+      const user = await User.findOneAndUpdate(
+        { _id: req.body.userId },
+        { $addToSet: { thoughts: thought._id }},
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(500).json({ message: 'Unable to add thought!'});
+      }
+
       res.json(thought);
     } catch (err) {
       console.log(err);
@@ -81,10 +88,9 @@ module.exports = {
         { $addToSet: { reaction: req.body }},
         { runValidators: true, new: true }
       );
-      Thought.reactions.push(thought);
-      // REVIEW See question from the other array field above?
+
       if (!thought) {
-        return res.status(404).json({ message: 'Unable to add reaction. No Thought found with that ID.'})
+        return res.status(500).json({ message: 'Unable to add reaction. No Thought found with that ID.'})
       }
     } catch (err) {
       res.status(500).json(err);
@@ -93,10 +99,12 @@ module.exports = {
 
   async deleteReaction(req, res) {
     try {
-      const thought = await Thought.findOneAndDelete(
-      Thought.reactions.pull({ _id: req.body.reactionId })
+      const thought = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: { reactionId: req.body.reactionId }}},
+        { runValidators: true, new: true }
     );
-        //REVIEW - ^ I feel like I'm on the right track, but am unsure of the "req.body.reactionId"
+    
     if (!thought) {
       return res.status(404).json({ message: 'Unable to remove reaction. Unknown error.' });
       }
