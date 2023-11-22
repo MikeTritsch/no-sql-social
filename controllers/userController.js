@@ -20,7 +20,7 @@ module.exports = {
       // REVIEW what does this mean??
 
       if (!user) {
-        return res.status(404).json({ message: 'No user with that ID'});
+        return res.status(404).json({ message: 'No user with that ID!'});
       }
 
       res.json(user);
@@ -45,10 +45,11 @@ module.exports = {
       const user = await User.findOneAndDelete({ _id: req.params.userId });
 
       if (!user) {
-        res.status(404).json({ message: 'No user with that ID'})
+        res.status(404).json({ message: 'No user with that ID!'})
       }
 
       await Thought.deleteMany({ _id: { $in: user.thoughts } });
+      // NOTE - Bonus - delete all associated thoughts
       res.json({ message: 'User and thoughts deleted!' });
     } catch (err) {
       res.status(500).json(err);
@@ -64,7 +65,7 @@ module.exports = {
       );
 
       if (!user) {
-        res.status(404).json({ message: 'No user with that ID' });
+        res.status(404).json({ message: 'No user with that ID!' });
       }
 
       res.json(user);
@@ -73,45 +74,47 @@ module.exports = {
     }
   },
 
-
-  //SECTION - Friend routes
-
-  // async addFriend(req, res) {
-  //   try {
-  //     const friend = await User.findOneAndUpdate(
-  //       { _id: req.params.userId },
-  //       { $addToSet: { }}
-  //     )
-
-  //     )
-  //   }
-  // }
+  // !SECTION - End main user routes 
 
 
+  // SECTION - Friend routes
+  // REVIEW - Unsure if these are correct
 
+  async addFriend(req, res) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friend: req.body } },
+        { runValidators: true, new: true }
+      );
 
+      if (!user) {
+        return res.status(404).json({ message: 'Unable to add friend. No user exists with that ID.' });
+      }
 
+      res.json(user);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+    },
 
+    async deleteFriend(req, res) {
+      try {
+        const user = await User.findOneAndDelete(
+          { _id: req.params.userId },
+          { $pull: { friend: { userId: req.params.userId }}},
+          { runValidators: true, new: true }
+        );
 
+        if (!user) {
+          return res.status(404).json({ message: 'Unable to remove friend. No user exists with that ID.' });
+        }
 
+        res.json({ message: "Now you see me, now you don't"});
+      } catch (err) {
+        res.status(500).json(err);
+      }
+    }
+  };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  //!SECTION End friend routes
