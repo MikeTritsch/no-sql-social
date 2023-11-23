@@ -17,7 +17,7 @@ module.exports = {
     try {
       const thought = await Thought.findOne({ _id: req.params.thoughtId })
 
-      if (!user) {
+      if (!thought) {
         return res.status(404).json({ message: 'No Thought found with that ID!' });
       }
 
