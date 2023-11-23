@@ -15,9 +15,7 @@ module.exports = {
 
   async getSingleUser(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.userId })
-      .select('__v');
-      // REVIEW what does this mean??
+      const user = await User.findOne({ _id: req.params._id })
 
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID!'});
@@ -42,7 +40,7 @@ module.exports = {
 
   async deleteUser(req, res) {
     try {
-      const user = await User.findOneAndDelete({ _id: req.params.userId });
+      const user = await User.findOneAndDelete({ _id: req.params._id });
 
       if (!user) {
         res.status(404).json({ message: 'No user with that ID!'})
@@ -59,7 +57,7 @@ module.exports = {
   async updateUser(req, res) {
     try {
       const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
+        { _id: req.params._id },
         { $set: req.body },
         { runValidators: true, new: true }
       );
@@ -83,7 +81,7 @@ module.exports = {
   async addFriend(req, res) {
     try {
       const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
+        { _id: req.params._id },
         { $addToSet: { friend: req.body } },
         { runValidators: true, new: true }
       );
@@ -101,7 +99,7 @@ module.exports = {
     async deleteFriend(req, res) {
       try {
         const user = await User.findOneAndDelete(
-          { _id: req.params.userId },
+          { _id: req.params._id },
           { $pull: { friend: { userId: req.params.userId }}},
           { runValidators: true, new: true }
         );
