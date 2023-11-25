@@ -86,15 +86,19 @@ module.exports = {
 
   async addReaction(req, res) {
     try {
+      const { reactionBody, username } = req.body;
+
       const thought = await Thought.findOneAndUpdate(
-        { _id: req.params._id },
-        { $addToSet: { reactions: req.body}},
+        { _id: req.params.thoughtId },
+        { $addToSet: { reactions: { reactionBody, username } } },
         // { runValidators: true, new: true }
       );
 
       if (!thought) {
         return res.status(500).json({ message: 'Unable to add reaction. No Thought found with that ID.'})
       }
+
+      res.json(thought);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -104,15 +108,15 @@ module.exports = {
     try {
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $pull: { reactions: { reactionId: req.body.reactionId }}},
-        { runValidators: true, new: true }
+        { $pull: { reactions: {reactionId: req.body.reactionId }}},
+        // { runValidators: true, new: true }
     );
     
     if (!thought) {
       return res.status(404).json({ message: 'Unable to remove reaction. Unknown error.' });
       }
 
-      res.json({ message: "Thought deleted!" })
+      res.json({ message: "Reaction deleted!" })
     } catch (err) {
       res.status(500).json(err);
     }
