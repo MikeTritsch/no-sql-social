@@ -82,7 +82,7 @@ module.exports = {
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params._id },
-        { $addToSet: { friends: req.params.friendId } },
+        { $addToSet: { friends: req.body.friendsId } },
         { runValidators: true, new: true }
       );
 
@@ -104,9 +104,9 @@ module.exports = {
 
     async deleteFriend(req, res) {
       try {
-        const user = await User.findOneAndDelete(
+        const user = await User.findOneAndUpdate(
           { _id: req.params._id },
-          { $pull: { friend: { userId: req.params.userId }}},
+          { $pull: { friends: req.params.friendsId }},
           { runValidators: true, new: true }
         );
 
@@ -114,7 +114,7 @@ module.exports = {
           return res.status(404).json({ message: 'Unable to remove friend. No user exists with that ID.' });
         }
 
-        res.json({ message: "Now you see me, now you don't"});
+        res.json({ message: "Now you see me, now you don't", user});
       } catch (err) {
         res.status(500).json(err);
       }

@@ -55,6 +55,8 @@ module.exports = {
       if (!thought) {
         res.status(404).json({ message: 'No Thought with that ID!' });
       }
+
+      res.json({ message: "Thought deleted!" })
     } catch (err) {
       return res.status(500).jsom(err);
     }
@@ -71,6 +73,8 @@ module.exports = {
       if (!thought) {
         res.status(404).json({ message: 'No Thought with that ID!' });
       }
+
+      res.json(thought);
     } catch (err) {
       return res.status(500).json(err);
     }
@@ -83,9 +87,9 @@ module.exports = {
   async addReaction(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
-        { $addToSet: { reaction: req.body }},
-        { runValidators: true, new: true }
+        { _id: req.params._id },
+        { $addToSet: { reactions: req.body}},
+        // { runValidators: true, new: true }
       );
 
       if (!thought) {
@@ -107,6 +111,8 @@ module.exports = {
     if (!thought) {
       return res.status(404).json({ message: 'Unable to remove reaction. Unknown error.' });
       }
+
+      res.json({ message: "Thought deleted!" })
     } catch (err) {
       res.status(500).json(err);
     }
