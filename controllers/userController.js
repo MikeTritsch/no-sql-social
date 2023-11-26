@@ -47,8 +47,9 @@ module.exports = {
       }
 
       await Thought.deleteMany({ _id: { $in: user.thoughts } });
-      // NOTE - Bonus - delete all associated thoughts
-      res.json({ message: 'User and thoughts deleted!' });
+      //NOTE - BONUS - delete associated thoughts
+
+      res.json({ message: 'User deleted!' });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -87,7 +88,7 @@ module.exports = {
       );
 
       const newFriend = await User.findOneAndUpdate(
-        { _id: req.params.friendId },
+        { _id: req.params.friendsId },
         { $addToSet: { friends: req.params._id }},
         { runValidators: true, new: true }
       );
@@ -110,11 +111,17 @@ module.exports = {
           { runValidators: true, new: true }
         );
 
+        const oldFriend = await User.findOneAndUpdate(
+          { _id: req.params.friendsId },
+          { $pull: { friends: req.params._id }},
+          { runValidators: true, new: true }
+        );
+
         if (!user) {
           return res.status(404).json({ message: 'Unable to remove friend. No user exists with that ID.' });
         }
 
-        res.json({ message: "Now you see me, now you don't", user});
+        res.json({ message: "Now you see me, now you don't", user, oldFriend});
       } catch (err) {
         res.status(500).json(err);
       }
