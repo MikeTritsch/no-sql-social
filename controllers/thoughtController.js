@@ -1,8 +1,9 @@
+//NOTE - Importing our User and Thought models
 const { User, Thought } = require('../models');
 
 module.exports = {
 
-  //SECTION - Thought routes
+  //SECTION - Thought controllers/routes, labelled literally
 
   async getThoughts(req, res) {
     try {

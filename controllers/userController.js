@@ -1,8 +1,9 @@
+//NOTE - Importing User and Thought models
 const { User, Thought } = require('../models');
 
 module.exports = {
 
-  //SECTION - User routes
+  //SECTION - User controllers/routes, labelled literally
 
   async getUsers(req, res) {
     try {
@@ -77,7 +78,6 @@ module.exports = {
 
 
   // SECTION - Friend routes
-  // REVIEW - Unsure if these are correct
 
   async addFriend(req, res) {
     try {

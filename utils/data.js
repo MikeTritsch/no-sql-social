@@ -1,3 +1,5 @@
+// NOTE - SAMPLE SEED DATA
+
 const userData = [
     {
       username: "natethegreat",

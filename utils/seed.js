@@ -1,3 +1,4 @@
+// NOTE - SEED FUNCTIONALITY (run node utils/seed.js from the root)
 const connection = require('../config/connection');
 const { User, Thought, reactionSchema } = require('../models');
 const { userData, thoughtData } = require('./data.js');

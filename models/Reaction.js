@@ -1,5 +1,7 @@
+//NOTE - Importing Schema and Types from the mongoose node package
 const { Schema, Types } = require('mongoose');
 
+//NOTE - Reaction layout
 const reactionSchema = new Schema(
   {
     reactionId: {
@@ -28,8 +30,10 @@ const reactionSchema = new Schema(
   }
 );
 
+//NOTE - Formatted date virtual (MM/DD/YYYY)
 reactionSchema.virtual('formattedDate').get(function () {
   return this.createdAt.toLocaleDateString("en-US");
 });
 
+//NOTE - Exports
 module.exports = reactionSchema;

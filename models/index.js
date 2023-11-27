@@ -1,3 +1,5 @@
+//NOTE - Bundling imports to be exported for use
+
 const User = require('./User');
 const Thought = require('./Thought');
 const reactionSchema = require('./Reaction');
