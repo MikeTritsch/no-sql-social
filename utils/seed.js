@@ -19,7 +19,7 @@ connection.once('open', async () => {
   }
 
   await User.insertMany(userData);
-  await Thought.insertMany(thoughtData);
+  // await Thought.insertMany(thoughtData);
 
   console.table(userData);
   console.info('Seeding complete! 🤝');
